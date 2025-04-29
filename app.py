@@ -1,4 +1,22 @@
 import streamlit as st
+# --- Inyectar manifest.json directamente
+st.markdown(
+    """
+    <link rel="manifest" href="manifest.webmanifest">
+
+    <script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('service-worker.js')
+        .then(function(registration) {
+            console.log('Service Worker registrado con alcance: ', registration.scope);
+        }).catch(function(error) {
+            console.log('Falló el registro del Service Worker:', error);
+        });
+    }
+    </script>
+    """,
+    unsafe_allow_html=True
+)
 import pandas as pd
 import os
 from zipfile import ZipFile
@@ -70,7 +88,7 @@ if "tipo_elemento" in st.session_state:
             descripcion = st.text_area("Descripción")
             num_luminarias = st.number_input("Número de luminarias", min_value=0, step=1)
             num_lamparas = st.number_input("Número de lámparas por luminaria", min_value=0, step=1)
-            tecnologia = st.text_input("Tecnología de lámpara")
+            tecnologia = st.selectbox("Tecnología de lámpara", ["LED", "Convencional"])
             modelo = st.text_input("Modelo de lámpara")
             fotografia = st.file_uploader("Fotografía", type=["jpg", "png", "jpeg"])
 
@@ -103,13 +121,14 @@ if "tipo_elemento" in st.session_state:
             orientacion = st.selectbox("Orientación", ["Norte", "Sur", "Este", "Oeste", "NE", "NO", "SE", "SO"])
             altura = st.number_input("Altura (m)", min_value=0.0)
             ancho = st.number_input("Ancho (m)", min_value=0.0)
+            unidades = st.number_input("Unidades", min_value=0.0)
             estado = st.text_input("Estado")
             comentario = st.text_area("Comentario")
             fotografia = st.file_uploader("Fotografía", type=["jpg", "png", "jpeg"])
 
             datos = {
                 "Proyecto": proyecto, "Técnico": tecnico, "Espacio": espacio, "Marco": marco, "Vidrio": vidrio,
-                "Orientación": orientacion, "Altura": altura, "Ancho": ancho, "Estado": estado,
+                "Orientación": orientacion, "Altura": altura, "Ancho": ancho, "Unidades": unidades, "Estado": estado, 
                 "Comentario": comentario, "Fotografía": ""
             }
 
@@ -125,13 +144,14 @@ if "tipo_elemento" in st.session_state:
             ano = st.number_input("Año", min_value=1900, max_value=2100, step=1)
             estado = st.text_input("Estado")
             comentario = st.text_area("Comentario")
+            placa = st.file_uploader("Foto de la Placa", type=["jpg", "png", "jpeg"])
             fotografia = st.file_uploader("Fotografía", type=["jpg", "png", "jpeg"])
 
             datos = {
                 "Proyecto": proyecto, "Técnico": tecnico, "Espacio Servicio": espacio, "Refrigerante": refrigerante,
                 "Capacidad Calorífica": capacidad_calorifica, "Consumo Calor": consumo_calor, "COP": cop,
                 "Capacidad Frigorífica": capacidad_frigorifica, "Consumo Frío": consumo_frio, "EER": eer,
-                "Año": ano, "Estado": estado, "Comentario": comentario, "Fotografía": ""
+                "Año": ano, "Estado": estado, "Comentario": comentario, "Foto Placa": "", "Fotografía": ""
             }
 
         elif tipo == "Equipos de Aire":
@@ -215,10 +235,6 @@ if st.button("📥 Descargar todos los datos en ZIP"):
     crear_zip()
     with open("datos_visita.zip", "rb") as f:
         st.download_button("Descargar ZIP", f, file_name="datos_visita.zip")
-# ----------------------------------------
-# BOTÓN FINAL: Eliminar datos guardados
-# ----------------------------------------
-
 st.markdown("---")
 
 # Estado para controlar confirmaciones
