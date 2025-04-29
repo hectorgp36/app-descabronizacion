@@ -215,3 +215,43 @@ if st.button("📥 Descargar todos los datos en ZIP"):
     crear_zip()
     with open("datos_visita.zip", "rb") as f:
         st.download_button("Descargar ZIP", f, file_name="datos_visita.zip")
+# ----------------------------------------
+# BOTÓN FINAL: Eliminar datos guardados
+# ----------------------------------------
+
+st.markdown("---")
+
+# Estado para controlar confirmaciones
+if "confirmar_borrado" not in st.session_state:
+    st.session_state.confirmar_borrado = False
+
+# Primer botón
+if not st.session_state.confirmar_borrado:
+    if st.button("🗑️ Eliminar todos los datos registrados"):
+        st.session_state.confirmar_borrado = True
+
+# Segundo botón de confirmación
+if st.session_state.confirmar_borrado:
+    st.warning("⚠️ ¿Estás absolutamente seguro de que quieres eliminar TODOS los datos? Esta acción no se puede deshacer.")
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        if st.button("✅ Sí, eliminar todo"):
+            # Borrar Excels
+            for archivo in os.listdir():
+                if archivo.endswith(".xlsx"):
+                    os.remove(archivo)
+            # Borrar carpetas de fotos
+            carpetas = [d for d in os.listdir() if os.path.isdir(d) and d.startswith("Fotos_")]
+            for carpeta in carpetas:
+                shutil.rmtree(carpeta)
+            # Volver a crear carpetas vacías
+            inicializar_carpetas()
+            
+            st.success("✅ Todos los datos y fotos han sido eliminados correctamente.")
+            st.session_state.confirmar_borrado = False  # Reseteamos confirmación
+
+    with col2:
+        if st.button("❌ No, cancelar"):
+            st.session_state.confirmar_borrado = False  # Cancelamos la operación
+
