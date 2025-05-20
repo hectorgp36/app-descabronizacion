@@ -101,7 +101,7 @@ if "tipo_elemento" in st.session_state:
         elif tipo == "Envolvente":
             espacio = st.text_input("Espacio")
             tipologia = st.text_input("Tipología")
-            orientacion = st.selectbox("Orientación", ["Norte", "Sur", "Este", "Oeste", "NE", "NO", "SE", "SO"])
+            orientacion = st.selectbox("Orientación", ["-","Norte", "Sur", "Este", "Oeste", "NE", "NO", "SE", "SO"])
             altura = st.number_input("Altura (m)", min_value=0.0)
             ancho = st.number_input("Ancho (m)", min_value=0.0)
             estado = st.text_input("Estado")
@@ -118,7 +118,7 @@ if "tipo_elemento" in st.session_state:
             espacio = st.text_input("Espacio")
             marco = st.text_input("Marco")
             vidrio = st.text_input("Vidrio")
-            orientacion = st.selectbox("Orientación", ["Norte", "Sur", "Este", "Oeste", "NE", "NO", "SE", "SO"])
+            orientacion = st.selectbox("Orientación", ["-","Norte", "Sur", "Este", "Oeste", "NE", "NO", "SE", "SO"])
             altura = st.number_input("Altura (m)", min_value=0.0)
             ancho = st.number_input("Ancho (m)", min_value=0.0)
             unidades = st.number_input("Unidades", min_value=0.0)
